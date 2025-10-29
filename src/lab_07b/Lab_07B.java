@@ -29,7 +29,7 @@ import javafx.util.Duration;
  */
 public class Lab_07B extends Application {
     private int frameIndex = 0;
-    private double frameDuration = 2000;
+    private double rate = 1;
     
     public static void main(String[] args) {
         launch(args);
@@ -48,7 +48,7 @@ public class Lab_07B extends Application {
         Label imageLabel = new Label();
         imageLabel.setGraphic(new ImageView(images[0]));
         
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(frameDuration));
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000));
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
         fadeTransition.setOnFinished(e -> {
@@ -76,21 +76,21 @@ public class Lab_07B extends Application {
         Button speedIncreaseButton = new Button("Speed +");
         
         speedIncreaseButton.setOnMouseClicked(e -> {
-            if (frameDuration > 500) {
-                frameDuration -= 500;
+            if (rate < 5) {
+                rate += 0.5;
             }
             
-            fadeTransition.setDuration(Duration.millis(frameDuration));
+            sequentialTransition.setRate(rate);
         });
         
         Button speedDecreaseButton = new Button("Speed -");
         
         speedDecreaseButton.setOnMouseClicked(e -> {
-            if (frameDuration < 5000) {
-                frameDuration += 500;
+            if (rate > 0.5) {
+                rate -= 0.5;
             }
             
-            fadeTransition.setDuration(Duration.millis(frameDuration));
+            sequentialTransition.setRate(rate);
         });
         
         // Buttons on the bottom, image in the center

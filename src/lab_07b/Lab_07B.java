@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -26,6 +27,9 @@ import javafx.util.Duration;
  * https://github.com/waffleprinter/Lab_07B.git
  */
 public class Lab_07B extends Application {
+    private int frameIndex = 0;
+    private double frameDuration = 2000;
+    
     public static void main(String[] args) {
         launch(args);
     }
@@ -41,15 +45,12 @@ public class Lab_07B extends Application {
         Label imageLabel = new Label();
         imageLabel.setGraphic(new ImageView(images[0]));
         
-        int[] frameIndex = {0};
-        
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(2000));
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(frameDuration));
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
-        fadeTransition.setAutoReverse(true);
         fadeTransition.setOnFinished(e -> {
-            frameIndex[0] = (frameIndex[0] + 1) % 20;
-            imageLabel.setGraphic(new ImageView(images[frameIndex[0]]));
+            frameIndex = (frameIndex + 1) % 20;
+            imageLabel.setGraphic(new ImageView(images[frameIndex]));
         });
         
         SequentialTransition sequentialTransition = new SequentialTransition(imageLabel, fadeTransition);
@@ -70,21 +71,33 @@ public class Lab_07B extends Application {
         Button speedIncreaseButton = new Button("Speed +");
         
         speedIncreaseButton.setOnMouseClicked(e -> {
-            // TODO: Add implementation
+            if (frameDuration > 500) {
+                frameDuration -= 500;
+            }
+            
+            fadeTransition.setDuration(Duration.millis(frameDuration));
         });
         
         Button speedDecreaseButton = new Button("Speed -");
         
         speedDecreaseButton.setOnMouseClicked(e -> {
-            // TODO: Add implementation
+            if (frameDuration < 5000) {
+                frameDuration += 500;
+            }
+            
+            fadeTransition.setDuration(Duration.millis(frameDuration));
+            System.out.println(fadeTransition.getDuration());
         });
         
         HBox buttonBar = new HBox(playPauseButton, speedIncreaseButton, speedDecreaseButton);
         buttonBar.setAlignment(Pos.CENTER);
         
+        HBox imageContainer = new HBox(imageLabel);
+        imageContainer.setAlignment(Pos.CENTER);
+        
         BorderPane root = new BorderPane();
         root.setBottom(buttonBar);
-        root.setTop(imageLabel);
+        root.setCenter(imageContainer);
         
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);

@@ -4,18 +4,26 @@
  */
 package lab_07b;
 
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
  * @author Jacques-Conrad Calagui-Painchaud 6298805
  * 2025/10/29
+ * https://github.com/waffleprinter/Lab_07B.git
  */
 public class Lab_07B extends Application {
     public static void main(String[] args) {
@@ -24,14 +32,38 @@ public class Lab_07B extends Application {
     
     @Override
     public void start(Stage stage) {
-        Button playPauseButton = new Button("Play ");
+        Image[] images = new Image[20];
+        
+        for (int i = 0; i < 20 ; i++) {
+            images[i] = new Image("file:images/" + (i + 101) + ".jpg");
+        }
+        
+        Label imageLabel = new Label();
+        imageLabel.setGraphic(new ImageView(images[0]));
+        
+        int[] frameIndex = {0};
+        
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(2000));
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.setAutoReverse(true);
+        fadeTransition.setOnFinished(e -> {
+            frameIndex[0] = (frameIndex[0] + 1) % 20;
+            imageLabel.setGraphic(new ImageView(images[frameIndex[0]]));
+        });
+        
+        SequentialTransition sequentialTransition = new SequentialTransition(imageLabel, fadeTransition);
+        sequentialTransition.setCycleCount(Animation.INDEFINITE);
+        
+        Button playPauseButton = new Button("Play");
         
         playPauseButton.setOnMouseClicked(e -> {
             if (playPauseButton.getText().equals("Play")) {
                 playPauseButton.setText("Pause");
-                // TODO: Add implementation of play and pause
+                sequentialTransition.play();
             } else {
                 playPauseButton.setText("Play");
+                sequentialTransition.pause();
             }
         });
         
@@ -52,6 +84,7 @@ public class Lab_07B extends Application {
         
         BorderPane root = new BorderPane();
         root.setBottom(buttonBar);
+        root.setTop(imageLabel);
         
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);

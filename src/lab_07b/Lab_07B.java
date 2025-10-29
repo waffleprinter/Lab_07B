@@ -8,6 +8,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,12 +37,14 @@ public class Lab_07B extends Application {
     
     @Override
     public void start(Stage stage) {
+        // Create images array
         Image[] images = new Image[20];
         
         for (int i = 0; i < 20 ; i++) {
             images[i] = new Image("file:images/" + (i + 101) + ".jpg");
         }
         
+        // Animation to cycle through images
         Label imageLabel = new Label();
         imageLabel.setGraphic(new ImageView(images[0]));
         
@@ -56,6 +59,7 @@ public class Lab_07B extends Application {
         SequentialTransition sequentialTransition = new SequentialTransition(imageLabel, fadeTransition);
         sequentialTransition.setCycleCount(Animation.INDEFINITE);
         
+        // Play-pause button allows to play when paused, and pause when playing
         Button playPauseButton = new Button("Play");
         
         playPauseButton.setOnMouseClicked(e -> {
@@ -68,6 +72,7 @@ public class Lab_07B extends Application {
             }
         });
         
+        // Speed increase/decrease buttons affect the length of each frame
         Button speedIncreaseButton = new Button("Speed +");
         
         speedIncreaseButton.setOnMouseClicked(e -> {
@@ -86,11 +91,12 @@ public class Lab_07B extends Application {
             }
             
             fadeTransition.setDuration(Duration.millis(frameDuration));
-            System.out.println(fadeTransition.getDuration());
         });
         
+        // Buttons on the bottom, image in the center
         HBox buttonBar = new HBox(playPauseButton, speedIncreaseButton, speedDecreaseButton);
         buttonBar.setAlignment(Pos.CENTER);
+        buttonBar.setPadding(new Insets(25));
         
         HBox imageContainer = new HBox(imageLabel);
         imageContainer.setAlignment(Pos.CENTER);
@@ -99,7 +105,7 @@ public class Lab_07B extends Application {
         root.setBottom(buttonBar);
         root.setCenter(imageContainer);
         
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(root, 600, 600);
         stage.setScene(scene);
         stage.show();
     }
